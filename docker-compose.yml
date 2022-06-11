@@ -1,0 +1,29 @@
+version: '3.8'
+
+services: 
+  
+  elasticsearch:
+    build:
+      context: elasticsearch/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      # Set memory heap size
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Not use cluster
+      discovery.type: single-node
+    networks:
+      - elkg
+
+networks:
+  elkg:
+    driver: bridge
+
+volumes:
+  elasticsearch:
